@@ -1,7 +1,3 @@
-/*
- * By Akbar Gumbira
- */
-
 package pathfinder;
 
 import java.awt.Point;
@@ -11,7 +7,7 @@ import mindstorm.Pathfinder;
 
 /**
  *
- * @author user
+ * @author Akbar Gumbira
  */
 public class BFSPathfinder implements Pathfinder {
 

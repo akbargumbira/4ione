@@ -1,7 +1,3 @@
-/*
- * By Ismail Sunii
- */
-
 package pathfinder;
 
 import java.awt.Point;
@@ -11,7 +7,7 @@ import mindstorm.Pathfinder;
 
 /**
  *
- * @author user
+ * @author Ismail Sunni
  */
 public class UCSPathfinder implements Pathfinder{
 
