@@ -1,3 +1,8 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package pathfinder;
 
 import java.awt.Point;
@@ -33,13 +38,11 @@ public class AStarPathfinder implements Pathfinder {
         for(Point p : maze.getButtons()) _tour.add(new AStarNode(p));
 
         //Calculating Fn
-        for(AStarNode node : _tour) node.calulateF(_startPoint, _endPoint);
         _endPoint.calulateF(_startPoint, _endPoint);
         _startPoint.calulateF(_startPoint, _endPoint);
 
         //Init tour
-        Collections.sort(_tour);
-        _tour.add(_endPoint);
+        initTour();
 
         //Reset
         reset();
@@ -60,6 +63,13 @@ public class AStarPathfinder implements Pathfinder {
 
         //Return found path if tour is finished, else return null
         return _tour.isEmpty() ? _completePath : null;
+    }
+
+    private void initTour() {
+        _tour.remove(_endPoint);
+        for (AStarNode node : _tour) node.calulateF(_startPoint, _endPoint);
+        Collections.sort(_tour);
+        _tour.add(_endPoint);
     }
 
     private void reset() {
@@ -86,12 +96,14 @@ public class AStarPathfinder implements Pathfinder {
                 _tour.remove(btn);
                 _completePath.addAll(candidate.createPathFromOrigin());
                 reset();
-                _curPoint = new AStarNode(_curPoint);
+                _curPoint   = new AStarNode(_curPoint);
+                _startPoint = _curPoint;
+                initTour();
             }
         }
 
         //If it is an Exit
-        else if(c == Maze.EXIT) {
+        else if(c == Maze.EXIT && _tour.size() == 1) {
             _completePath.addAll(candidate.createPathFromOrigin());
             _tour.remove(candidate);
         }
