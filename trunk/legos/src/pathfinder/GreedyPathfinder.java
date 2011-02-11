@@ -1,7 +1,3 @@
-/*
- * By Rezan Achmad
- */
-
 package pathfinder;
 
 import java.awt.Point;
@@ -11,7 +7,7 @@ import mindstorm.Pathfinder;
 
 /**
  *
- * @author user
+ * @author Rezan Achmad
  */
 public class GreedyPathfinder implements Pathfinder {
 

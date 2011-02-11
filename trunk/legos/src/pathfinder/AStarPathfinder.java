@@ -1,7 +1,3 @@
-/*
- * By Ecky Putrady
- */
-
 package pathfinder;
 
 import java.awt.Point;

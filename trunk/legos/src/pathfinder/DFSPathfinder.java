@@ -1,7 +1,3 @@
-/*
- * By Sandy Socrates
- */
-
 package pathfinder;
 
 import java.awt.Point;
@@ -11,7 +7,7 @@ import mindstorm.Pathfinder;
 
 /**
  *
- * @author user
+ * @author Sandy Socrates
  */
 public class DFSPathfinder implements Pathfinder {
 
