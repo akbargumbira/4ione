@@ -1,2 +1,5 @@
 10/2/2011 Kamis
 18.00 - 21.00 : Membuat Maze, Pathfinder, AStarPathfinder
+
+12/2/2011 Sabtu
+17.32 - 18.00 : Kelas logging, Edit AStarPathfinder biar log-ready

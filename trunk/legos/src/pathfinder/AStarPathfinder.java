@@ -1,14 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package pathfinder;
 
 import java.awt.Point;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import mindstorm.LogWriter;
 import mindstorm.Maze;
 import mindstorm.Pathfinder;
 
@@ -17,16 +13,24 @@ import mindstorm.Pathfinder;
  * @author Ecky
  */
 public class AStarPathfinder implements Pathfinder {
-    private AStarNode _startPoint;
-    private AStarNode _endPoint;
+    private AStarNode       _startPoint;
+    private AStarNode       _endPoint;
     private List<AStarNode> _tour;
     private List<AStarNode> _closed;
     private List<AStarNode> _open;
-    private List<Point> _completePath;
-    private AStarNode _curPoint;
-    private Maze _maze;
+    private List<Point>     _completePath;
+    private AStarNode       _curPoint;
+    private Maze            _maze;
+    private LogWriter       _log;
+
+    public AStarPathfinder(LogWriter log) {
+        _log = log;
+    }
 
     public List<Point> solve(Maze maze) {
+        //Logging
+        _log.log("Init A* search");
+        long startTime = System.currentTimeMillis();
 
         ///Init vars
         _maze           = maze;
@@ -60,6 +64,14 @@ public class AStarPathfinder implements Pathfinder {
             //Exit if tour has completed
             if(_tour.isEmpty()) break;
         }
+
+        //Result to log
+        _log.log(
+                "A* " +
+                (_tour.isEmpty() ? "succeeded" : "failed") +
+                ". Total time " +
+                Long.toString(System.currentTimeMillis() - startTime) + "ms"
+        );
 
         //Return found path if tour is finished, else return null
         return _tour.isEmpty() ? _completePath : null;
