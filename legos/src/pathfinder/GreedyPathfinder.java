@@ -10,9 +10,11 @@ import mindstorm.Pathfinder;
  * @author Rezan Achmad
  */
 public class GreedyPathfinder implements Pathfinder {
+    private List<Point> _tour;
 
     public List<Point> solve(Maze maze) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+        return _tour;
     }
 
 }
