@@ -1,2 +1,4 @@
 Jumat 11 Februari 2011
-10:30 - 11:00 Kerangka Kelas BFSPathfinder
+10:30 - 11:00 Kerangka Kelas GreedyPathfinder
+
+13:00 - 16:00 Heuristik dan GreedyPathFinder

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pathfinder.AStarPathfinder;
+import pathfinder.GreedyPathfinder;
 
 /**
  *
@@ -29,6 +30,7 @@ public class Main {
 
             //Solve it
             Pathfinder f = new AStarPathfinder(log);
+            f = new GreedyPathfinder(log);
             List<Point> path = f.solve(m);
 
             //Print the found path

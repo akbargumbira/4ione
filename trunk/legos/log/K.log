@@ -13,3 +13,18 @@ Sat Feb 12 17:59:42 ICT 2011> Init A* search
 Sat Feb 12 17:59:42 ICT 2011> A* succeeded. Total time 2ms
 Sat Feb 12 17:59:59 ICT 2011> LOG ENDED
 
+Tue Feb 15 15:34:39 ICT 2011> LOG STARTED
+Tue Feb 15 15:34:39 ICT 2011> Init A* search
+Tue Feb 15 15:34:39 ICT 2011> A* succeeded. Total time 2ms
+Tue Feb 15 15:34:56 ICT 2011> LOG ENDED
+
+Tue Feb 15 15:35:12 ICT 2011> LOG STARTED
+Tue Feb 15 15:35:13 ICT 2011> Init A* search
+Tue Feb 15 15:35:13 ICT 2011> A* succeeded. Total time 3ms
+Tue Feb 15 15:35:32 ICT 2011> LOG ENDED
+
+Tue Feb 15 15:37:23 ICT 2011> LOG STARTED
+Tue Feb 15 15:37:24 ICT 2011> Init Best-first search
+Tue Feb 15 15:37:24 ICT 2011> Best-first succeeded. Total time 3ms
+Tue Feb 15 15:37:43 ICT 2011> LOG ENDED
+
