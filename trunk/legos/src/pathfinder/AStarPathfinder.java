@@ -1,6 +1,7 @@
 package pathfinder;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +42,9 @@ public class AStarPathfinder implements Pathfinder {
         _completePath   = new LinkedList<Point>();
         for(Point p : maze.getButtons()) _tour.add(new AStarNode(p));
 
+        //Log
+        _log.log("Starting node : " + _startPoint);
+
         //Calculating Fn
         _endPoint.calulateF(_startPoint, _endPoint);
         _startPoint.calulateF(_startPoint, _endPoint);
@@ -52,8 +56,12 @@ public class AStarPathfinder implements Pathfinder {
         reset();
 
         while(true) {
+
             //Get candidates
             getNewCandidates();
+
+            //Log
+            _log.log("Open list : " + _open);
 
             //Exit if there is no candidate
             if(_open.isEmpty()) break;
@@ -70,8 +78,11 @@ public class AStarPathfinder implements Pathfinder {
                 "A* " +
                 (_tour.isEmpty() ? "succeeded" : "failed") +
                 ". Total time " +
-                Long.toString(System.currentTimeMillis() - startTime) + "ms"
+                Long.toString(System.currentTimeMillis() - startTime) + "ms (Including logging time)"
         );
+        String path = "";
+        for(Point p : _completePath) path += ">>(" + p.x + "," + p.y + ")";
+        _log.log("Complete path : " + path);
 
         //Return found path if tour is finished, else return null
         return _tour.isEmpty() ? _completePath : null;
@@ -79,15 +90,27 @@ public class AStarPathfinder implements Pathfinder {
 
     private void initTour() {
         _tour.remove(_endPoint);
-        for (AStarNode node : _tour) node.calulateF(_startPoint, _endPoint);
-        Collections.sort(_tour);
+        _tour = getShortestTour();
         _tour.add(_endPoint);
+
+        //Log
+        String tour = "";
+        for(AStarNode node : _tour) tour += ">>" + node.toString();
+        _log.log("Planned tour : " + tour);
+    }
+
+    //Using greedy to get the shortest tour
+    private List<AStarNode> getShortestTour() {
+        for(AStarNode node : _tour) node.calulateF(_curPoint, node);
+        Collections.sort(_tour);
+        return _tour;
     }
 
     private void reset() {
         //Reset vars
         _closed = new LinkedList<AStarNode>();
         _open   = new LinkedList<AStarNode>();
+        _closed.add(_curPoint);
     }
 
     private void processNode(AStarNode candidate) {
@@ -98,7 +121,7 @@ public class AStarPathfinder implements Pathfinder {
             //Search the button in tour
             AStarNode btn = null;
             for(AStarNode p : _tour) {
-                if(p.x == candidate.x && p.y == candidate.y) {
+                if(p.isEqual(candidate)) {
                     btn = p;
                     break;
                 }
@@ -110,6 +133,9 @@ public class AStarPathfinder implements Pathfinder {
                 reset();
                 _curPoint   = new AStarNode(_curPoint);
                 _startPoint = _curPoint;
+
+                _log.log("Stepped on BUTTON " + candidate.toString());
+
                 initTour();
             }
         }
@@ -118,6 +144,9 @@ public class AStarPathfinder implements Pathfinder {
         else if(c == Maze.EXIT && _tour.size() == 1) {
             _completePath.addAll(candidate.createPathFromOrigin());
             _tour.remove(candidate);
+
+            _log.log("Stepped on EXIT " + candidate.toString());
+            
         }
     }
 
@@ -125,10 +154,13 @@ public class AStarPathfinder implements Pathfinder {
         Collections.sort(_open);
         AStarNode selected = _open.remove(0);
         _closed.add(selected);
+        _log.log("Moving to : " + selected.toString());
         return _curPoint = selected;
     }
 
     private void getNewCandidates() {
+        List<String> candidates = new ArrayList<String>();
+
         for(int x = -1; x <= 1; ++x) {
             for(int y = -1; y <= 1; ++y) {
                 //Continue if invalid point
@@ -140,16 +172,22 @@ public class AStarPathfinder implements Pathfinder {
 
                 //If a button found, set the Fn to minimum so the node will be
                 //more likely to be chosen next
-                if(_maze.getCell(node.x, node.y) != Maze.BUTTON)
+                if(_maze.getCell(node.x, node.y) != Maze.BUTTON) {
                     node.calulateF(_startPoint, _tour.get(0));
-                else
+                    candidates.add(node.toString() + " f = " + node.getF());
+                }
+                else {
                     node.calulateF(node, node);
+                    candidates.add(node.toString() + " f = " + node.getF() + " <BUTTON!>");
+                }
 
                 //Set the parent and add it as a candidate
                 node.parent = _curPoint;
                 _open.add(node);
             }
         }
+
+        _log.log("New node candidates : " + candidates);
     }
 
     private boolean isValidCandidate(int x, int y) {
@@ -182,7 +220,17 @@ public class AStarPathfinder implements Pathfinder {
         }
 
         public int calulateF(AStarNode startNode, AStarNode endNode) {
-            return f = getManhattanDistance(startNode) + getManhattanDistance(endNode);
+            f = getManhattanDistance(startNode) + getManhattanDistance(endNode);
+            return f;
+        }
+
+        public boolean isEqual(Point p) {
+            return x == p.x && y == p.y;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + x + "," + y + ")";
         }
 
         public int getF() {

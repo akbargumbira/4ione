@@ -16,24 +16,12 @@ public class LogWriter {
 
     public LogWriter(String filename) throws IOException {
         _writer = new BufferedWriter(new FileWriter(filename, true));
-        log("LOG STARTED");
-    }
-
-    public void log(String log, boolean useTime) {
-        if(useTime) log(log);
-        else {
-            try {
-                _writer.write(log);
-                _writer.newLine();
-            } catch (IOException ex) {
-                Logger.getLogger(LogWriter.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        log("LOG STARTED : " + new Date().toString());
     }
 
     public void log(String log) {
         try {
-            _writer.write(new Date().toString() + "> " + log);
+            _writer.write(log);
             _writer.newLine();
         } catch (IOException ex) {
             Logger.getLogger(LogWriter.class.getName()).log(Level.SEVERE, null, ex);
@@ -41,8 +29,10 @@ public class LogWriter {
     }
 
     public void close() {
-        log("LOG ENDED");
+        log("LOG ENDED : " + new Date().toString());
         try {
+            _writer.newLine();
+            _writer.newLine();
             _writer.newLine();
             _writer.close();
         } catch (IOException ex) {
