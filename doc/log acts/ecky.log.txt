@@ -3,3 +3,6 @@
 
 12/2/2011 Sabtu
 17.32 - 18.00 : Kelas logging, Edit AStarPathfinder biar log-ready
+
+16/2/2011 Rabu
+20:07 - 10.11 : Tweaking logging, Optimizing AStarPathFinder (dan gagal), Log untuk AStar
