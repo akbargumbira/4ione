@@ -23,6 +23,7 @@ public class LogWriter {
         try {
             _writer.write(log);
             _writer.newLine();
+            System.out.println(log);
         } catch (IOException ex) {
             Logger.getLogger(LogWriter.class.getName()).log(Level.SEVERE, null, ex);
         }
