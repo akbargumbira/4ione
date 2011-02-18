@@ -5,7 +5,11 @@
 17.32 - 18.00 : Kelas logging, Edit AStarPathfinder biar log-ready
 
 16/2/2011 Rabu
-20:07 - 10.11 : Tweaking logging, Optimizing AStarPathFinder (dan gagal), Log untuk AStar
+20.07 - 10.11 : Tweaking logging, Optimizing AStarPathFinder (dan gagal), Log untuk AStar
 
 17/2/2011 Kamis
-12:13 - 13.35 : Aplikasi bagian komputer (Main.java), converter path ke robot readable format
+12.13 - 13.35 : Aplikasi bagian komputer (Main.java), converter path ke robot readable format
+
+18/2/2011 Jumat
+10.15 - 11.30 : Pair programming dengan rezan membuat program bagian robot
+15.15 - 17.00 : Melanjutkan program bagian robot, testing programnya
