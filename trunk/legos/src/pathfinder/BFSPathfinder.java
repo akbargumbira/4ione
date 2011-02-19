@@ -10,7 +10,7 @@ import java.util.*;
  *
  * @author Akbar Gumbira
  */
-public class BFSPathfinder implements Pathfinder,Cloneable{
+public class BFSPathfinder implements Pathfinder{
 
     private Maze            _maze;
     private LogWriter       _log;
