@@ -36,6 +36,28 @@ public class Maze {
         _exitPos    = new Point(0, 0);
         _buttons    = new ArrayList<Point>();
     }
+    
+    public Maze cloneMaze() {
+        Maze cloneMaze = new Maze();
+
+        cloneMaze._map = new char[_sizeX][_sizeY];
+        for (int j=0; j<_sizeY; ++j)
+        {
+            for (int i=0; i<_sizeX; ++i)
+            {
+                cloneMaze._map[i][j] =_map[i][j];
+
+            }
+        }
+        cloneMaze._sizeX = _sizeX;
+        cloneMaze._sizeY = _sizeY;
+       
+        cloneMaze._enterPos = cloneMaze.getEnterPos();
+        cloneMaze._exitPos = cloneMaze.getExitPos();
+        cloneMaze._buttons = cloneMaze.getButtons();
+        
+        return cloneMaze;
+    }
 
     /**
      * Initialize map from file.
@@ -107,6 +129,11 @@ public class Maze {
     public char getCell(int posX, int posY) {
         return _map[posX][posY];
     }
+
+    public void setCell(int posX, int posY, char C, Maze m){
+        m._map[posX][posY] = Character.toUpperCase(C);
+    }
+
 
     /**
      * Get string that represents the current maze. print it so you an see it.

@@ -1,8 +1,8 @@
 8
 6
-e x p p p p p b
+e p p x p p p w
 w w p p w w w p
 b p p p p p p b
 w w p p w w w p
 b p p p p p p p
-w w p p w w w w
+w w p p w b w w
