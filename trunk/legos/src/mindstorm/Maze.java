@@ -130,8 +130,8 @@ public class Maze {
         return _map[posX][posY];
     }
 
-    public void setCell(int posX, int posY, char C, Maze m){
-        m._map[posX][posY] = Character.toUpperCase(C);
+    public void setCell(int posX, int posY, char C){
+        _map[posX][posY] = Character.toUpperCase(C);
     }
 
 

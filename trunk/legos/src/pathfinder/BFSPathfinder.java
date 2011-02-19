@@ -99,7 +99,7 @@ public class BFSPathfinder implements Pathfinder,Cloneable{
                 }
                 ++buttontouched;
                 startNode = currNode = tempNode;
-                tempMaze.setCell(startNode.x, startNode.y, Maze.PATH, tempMaze);
+                tempMaze.setCell(startNode.x, startNode.y, Maze.PATH);
              }
         }
 
