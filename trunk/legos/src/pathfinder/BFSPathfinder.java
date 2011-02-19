@@ -1,9 +1,6 @@
 package pathfinder;
 
 import java.awt.Point;
-import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mindstorm.LogWriter;
 import mindstorm.Maze;
 import mindstorm.Pathfinder;
