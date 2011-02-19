@@ -1,8 +1,10 @@
 package mindstorm;
 
 import java.awt.Point;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,37 +27,26 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         try {
-            //Check args, exit if fail
-            if(args.length < 2) {
-                printUsage();
-                return;
-            }
-
             //Init log
             log = new LogWriter("log/K.log");
-            
-            //Load maze
-            Maze m = new Maze().load(args[0]);
-            log.log("maze " + args[0] + " loaded successfully");
-            System.out.println(m.getMapRepresentation());
 
-            //Solve it
-            Pathfinder f = parseAlgoName(args[1]);
-            if(f == null) {
-                System.out.println("Unknown Algorithm : " + args[1]);
-                printUsage();
-                return;
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            String s;
+            while(true) {
+                //Read user input
+                System.out.print(">");
+                s = in.readLine();
+
+                //Exit if s is empty
+                if(s.isEmpty()) break;
+
+                //Parse user input
+                List<Character> toSend = parseUserInput(s);
+                if(toSend == null) continue;
+
+                //Send to robot
+                sendToRobot(toSend);
             }
-            List<Point> path = f.solve(m);
-
-            //Exit if path not found
-            if(path == null) return;
-
-            //Convert the path to Robot readable format
-            List<Character> converted = convertPath(path, 0);
-            log.log("Path converted to " + converted);
-
-            //Send it to robot
 
             //Close log
             log.close();
@@ -63,6 +54,103 @@ public class Main {
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Print program usage
+     */
+    private static void printUsage() {
+        System.out.println("[USAGE] ----------------------------------- ");
+        System.out.println("Solve Maze : ");
+        System.out.println("sm <maze file> <astar|bfs|dfs|greedy|ucs>");
+        System.out.println("Use any combination of these to set robot :");
+        System.out.println("ml <0-7>     -- Set robot's left motor power");
+        System.out.println("mr <0-7>     -- Set robot's left motor power");
+        System.out.println("rl <number>  -- Set rotate 90deg left time");
+        System.out.println("rr <number>  -- Set rotate 90deg right time");
+        System.out.println("ff <number>  -- Set forward one cell time");
+        System.out.println("[USAGE] ----------------------------------- ");
+    }
+
+    /**
+     * Returns list of character that is ready to be sent to robot.
+     * Those characters contains no space
+     * @param userInput
+     * @return
+     */
+    private static List<Character> parseUserInput(String userInput) {
+        //Vars
+        List<Character> comm = null;
+
+        //Solve maze and send it to robot
+        if(userInput.matches("^sm\\s+\\S+\\s+(astar|bfs|dfs|greedy|ucs)$")) {
+            String ss[] = userInput.split("\\s+");
+            comm        = solveMaze(ss[1], ss[2]);
+            if(comm != null) {
+                comm.add(0, 'm');
+                comm.add(0, 's');
+            }
+        }
+        
+        //Robot settings :
+        // The regex only matches, with or without spaces, in or not in line :
+        // ml <0-7>
+        // mr <0-7>
+        // rl <number>
+        // rr <number>
+        // ff <number>
+        // Ex :
+        //  ml 7 mr 6 rl 4000 rr 4000 ff 1200
+        //  ml 7 rl 400
+        else if(userInput.matches("^(((ml\\s*[0-7])|(mr\\s*[0-7])|(rl\\s*\\d+)|(rr\\s*\\d+)|(ff\\s*\\d+))(\\s*))+$")) {
+            String ss   = userInput.replaceAll("\\s+", "");
+            char ch[]   = ss.toCharArray();
+            comm        = new ArrayList<Character>();
+            for(char c : ch) comm.add(c);
+        }
+
+        //Invalid input, show the usage
+        else printUsage();
+
+        //Return
+        return comm;
+    }
+
+    /**
+     * Solve the maze and return array of char (command) for robot to execute
+     * @param mazeName
+     * @param algoName
+     * @return
+     */
+    private static List<Character> solveMaze(String mazeName, String algoName) {
+        try {
+
+            //Load maze
+            Maze m = new Maze().load(mazeName);
+            log.log("maze " + mazeName + " loaded successfully");
+            System.out.println(m.getMapRepresentation());
+
+            //Solve it
+            Pathfinder f = parseAlgoName(algoName);
+            if (f == null) {
+                System.out.println("Unknown Algorithm : " + algoName);
+                printUsage();
+                return null;
+            }
+            List<Point> path = f.solve(m);
+            
+            //Exit if path not found
+            if (path == null) return null;
+
+            //Return the list of character (convertedpath)
+            List<Character> converted = convertPath(path, 0);
+            log.log("Path converted to " + converted);
+            return converted;
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
 
@@ -74,10 +162,6 @@ public class Main {
         if(name.equalsIgnoreCase("UCS"))    return new UCSPathfinder();
 
         return null;
-    }
-
-    private static void printUsage() {
-        System.out.println("usage : Main <mazefile> <AStar|BFS|DFS|Greedy|UCS>");
     }
 
     /**
@@ -145,5 +229,14 @@ public class Main {
             }
         }
         return ret;
+    }
+
+    /**
+     * Send the list of character to robot
+     * @param toSend
+     */
+    private static void sendToRobot(List<Character> toSend) {
+        //TODO communication thingies
+        System.out.println("Unimplemented send : " + toSend);
     }
 }

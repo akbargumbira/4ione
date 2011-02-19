@@ -13,3 +13,6 @@
 18/2/2011 Jumat
 10.15 - 11.30 : Pair programming dengan rezan membuat program bagian robot
 15.15 - 17.00 : Melanjutkan program bagian robot, testing programnya
+
+19/2/2011 Sabtu
+20.00 - 21.17 : Program bagian komputer (parsing user input), tinggal siap untuk komunikasi dgn RCX
