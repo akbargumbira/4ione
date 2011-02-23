@@ -5,6 +5,8 @@
 
 package robot;
 
+import com.sun.xml.internal.stream.buffer.stax.StreamWriterBufferCreator;
+
 /**
  *
  * @author user
@@ -15,7 +17,6 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
     }
 
 }
