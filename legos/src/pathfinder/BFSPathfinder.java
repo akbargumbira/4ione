@@ -33,7 +33,7 @@ public class BFSPathfinder implements Pathfinder{
         return child;
     }
 
-    public boolean isButtonTouched(List<Point> buttons, Point button) {
+    public boolean isuttonTouched(List<Point> buttons, Point button) {
         for (int i=0; i< buttons.size();++i)
         {
             if (button.x==buttons.get(i).x && button.y==buttons.get(i).y)   return true;
