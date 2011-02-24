@@ -200,6 +200,7 @@ public class Robot {
                 int newVal = readSensor();
                 if(lastSensorVal/10 != newVal/10) {
                     forwardTime = (int) System.currentTimeMillis() - startTime;
+                    forwardTime /= 2;
                     state = 0;
                     LCD.clear();
                     LCD.showNumber(forwardTime);
