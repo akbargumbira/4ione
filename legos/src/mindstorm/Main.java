@@ -67,8 +67,8 @@ public class Main {
         System.out.println("Solve Maze : ");
         System.out.println("sm <maze file> <astar|bfs|dfs|greedy|ucs>");
         System.out.println("Use any combination of these to set robot :");
-        System.out.println("ml <0-7>     -- Set robot's left motor power");
-        System.out.println("mr <0-7>     -- Set robot's left motor power");
+        System.out.println("ml <number>  -- Set robot's left motor power");
+        System.out.println("mr <number>  -- Set robot's left motor power");
         System.out.println("rl <number>  -- Set rotate 90deg left time");
         System.out.println("rr <number>  -- Set rotate 90deg right time");
         System.out.println("ff <number>  -- Set forward one cell time");
@@ -97,15 +97,15 @@ public class Main {
         
         //Robot settings :
         // The regex only matches, with or without spaces, in or not in line :
-        // ml <0-7>
-        // mr <0-7>
+        // ml <number>
+        // mr <number>
         // rl <number>
         // rr <number>
         // ff <number>
         // Ex :
         //  ml 7 mr 6 rl 4000 rr 4000 ff 1200
         //  ml 7 rl 400
-        else if(userInput.matches("^(((ml\\s*[0-7])|(mr\\s*[0-7])|(rl\\s*\\d+)|(rr\\s*\\d+)|(ff\\s*\\d+))(\\s*))+$")) {
+        else if(userInput.matches("^((ml|mr|rl|rr|ff)\\s*\\d+\\s*)+$")) {
             String ss   = userInput.replaceAll("\\s+", "");
             char ch[]   = ss.toCharArray();
             comm        = new ArrayList<Character>();
@@ -201,13 +201,13 @@ public class Main {
                 switch(curDir) {
                     case 0 : ret.add(FORWARD); break;
                     case 1 : ret.add(TURN_LEFT); --curDir; ret.add(FORWARD); break;
-                    case 2 : ret.add(BACKWARD); break;
+                    case 2 : ret.add(BACKWARD); ret.add(FORWARD); curDir += 2; break;
                     case 3 : ret.add(TURN_RIGHT); ++curDir; ret.add(FORWARD); break;
                 }
             }
             else if(dy > 0) {
                 switch(curDir) {
-                    case 0 : ret.add(BACKWARD); break;
+                    case 0 : ret.add(BACKWARD); ret.add(FORWARD); curDir += 2; break;
                     case 1 : ret.add(TURN_RIGHT); ++curDir; ret.add(FORWARD); break;
                     case 2 : ret.add(FORWARD); break;
                     case 3 : ret.add(TURN_LEFT); --curDir; ret.add(FORWARD); break;
@@ -218,13 +218,13 @@ public class Main {
                     case 0 : ret.add(TURN_RIGHT); ++curDir; ret.add(FORWARD); break;
                     case 1 : ret.add(FORWARD); break;
                     case 2 : ret.add(TURN_LEFT); --curDir; ret.add(FORWARD); break;
-                    case 3 : ret.add(BACKWARD); break;
+                    case 3 : ret.add(BACKWARD); ret.add(FORWARD); curDir += 2; break;
                 }
             }
             else if(dx < 0) {
                 switch(curDir) {
                     case 0 : ret.add(TURN_LEFT); --curDir; ret.add(FORWARD); break;
-                    case 1 : ret.add(BACKWARD); break;
+                    case 1 : ret.add(BACKWARD); ret.add(FORWARD); curDir += 2; break;
                     case 2 : ret.add(TURN_RIGHT); ++curDir; ret.add(FORWARD); break;
                     case 3 : ret.add(FORWARD); break;
                 }
@@ -239,14 +239,12 @@ public class Main {
      */
     private static void sendToRobot(List<Character> toSend) {
         try {
-            //TODO communication thingies
             RCXPort rp = new RCXPort("usb");
             OutputStream out = rp.getOutputStream();
 
             for (int i=0; i<toSend.size(); ++i)
                 out.write(toSend.get(i));
 
-            out.write(' ');
             out.write(' ');
             out.close();
             rp.close();
