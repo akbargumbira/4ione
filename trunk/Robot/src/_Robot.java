@@ -172,10 +172,10 @@ public class _Robot {
         private float totalTime = 0;
         private byte tryCount = 0;
         private float startTime;
-        private Robot robot;
+        private _Robot _Robot;
 
-        public SetForward(Robot r) {
-            robot = r;
+        public SetForward(_Robot r) {
+            _Robot = r;
         }
 
         public void init() {
@@ -195,7 +195,7 @@ public class _Robot {
                 stopMotor();
                 totalTime += System.currentTimeMillis() - startTime;
                 state = 0;
-                robot.forwardTime = getAverage();
+                _Robot.forwardTime = getAverage();
             }
 
             showInfo();
@@ -205,7 +205,7 @@ public class _Robot {
             // Reset
             totalTime = 0;
             tryCount = 0;
-            robot.forwardTime = 1000;
+            _Robot.forwardTime = 1000;
             showInfo();
         }
 
@@ -226,7 +226,7 @@ public class _Robot {
 
     private class SetRotate extends Action {
 
-        private Robot robot;
+        private _Robot _Robot;
         private byte state;
         private float totalTimeA = 0;
         private float totalTimeC = 0;
@@ -234,8 +234,8 @@ public class _Robot {
         private byte tryCountC = 0;
         private float startTime;
 
-        public SetRotate(Robot robot) {
-            this.robot = robot;
+        public SetRotate(_Robot _Robot) {
+            this._Robot = _Robot;
         }
 
         public void init() {
@@ -473,7 +473,7 @@ public class _Robot {
     }
 
     public static void main(String[] args) {
-        Robot r = new Robot();
+        _Robot r = new _Robot();
         while (!r.isDone()) {
         }
     }
