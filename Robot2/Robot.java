@@ -497,7 +497,7 @@ public class Robot {
         int timer;
         
         public boolean update() {
-            timer += System.currentTimeMillis();
+            timer = (int) (timer + (int)System.currentTimeMillis());
             if(timer > forwardTime) _hasSucceeded = true;
             return true;
         }
@@ -506,7 +506,7 @@ public class Robot {
     private class WallHandling extends Action {
         byte state;
         byte found;
-        int timer;
+        float timer;
         int searchtime = 2000;
 
         //WARNING : Messy state transition management :/
@@ -522,12 +522,13 @@ public class Robot {
 
         public boolean update() {
             try {
+                
                 if(state == 0) {
                     if(readSensor()/10 != 2) {
-                        timer = (int) (System.currentTimeMillis() - timer);
+                        timer = (int) ((int)System.currentTimeMillis() - timer);
                         found = 1; //found right
                         farRight(-1);
-                        Thread.sleep(timer);
+                        Thread.sleep((int)timer);
 
                         //Backward..
                         backward();
@@ -545,10 +546,10 @@ public class Robot {
                 }
                 else if(state == 2) {
                     if(readSensor()/10 != 2) {
-                        timer = (int) (System.currentTimeMillis() - timer);
+                        timer = (int) ((int)System.currentTimeMillis() - timer);
                         found = 2; //found left
                         farLeft(-1);
-                        Thread.sleep(timer);
+                        Thread.sleep((int)timer);
 
                         //Backward..
                         backward();
@@ -570,10 +571,11 @@ public class Robot {
                         //Correcting
                         if(found == 2) farLeft(1);
                         else farRight(1);
-                        Thread.sleep(timer);
+                        Thread.sleep((int)timer);
                         return true;
                     }
                 }
+
             } catch(Exception e) {
                 
             }
