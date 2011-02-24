@@ -23,8 +23,13 @@ public class Robot {
 
     // Step
     int SIZE = 200;
-    char[] steps;
+    char[] steps = new char[SIZE];
 
+    // Sensor
+    public static int BLACK = 20;
+    public static int GREEN = 30;
+    public static int WHITE = 40;
+    private int sensorValue = 0;
 
     public Robot() {
         // Init Variable
@@ -38,6 +43,8 @@ public class Robot {
         states[2] = new SetRotate(this);
         states[3] = new Comm();
         states[4] = new RunMaze();
+
+        activateSensor();
 
         // Add Listener
         Button.VIEW.addButtonListener(new ButtonListener() {
@@ -79,19 +86,41 @@ public class Robot {
         states[currentState].init();
     }
 
+    private void activateSensor() {
+        Sensor.S2.setTypeAndMode(3, 0x80);
+        Sensor.S2.activate();
+        Sensor.S2.addSensorListener(new SensorListener() {
+            public void stateChanged (Sensor src, int oldValue, int newValue) {
+                sensorValue = newValue;
+                //Print disini
+            }
+        });
+    }
+
     public void stop() {
         Motor.A.stop();
         Motor.C.stop();
     }
 
     public void forward() {
+        int startTime = (int)System.currentTimeMillis();
+        int oldSensorValue = sensorValue;
         Motor.A.forward();
         Motor.C.forward();
-        try {
-            Thread.sleep((long) forwardTime);
-        } catch (InterruptedException ex) {
-            //
+        while(true) {
+            LCD.clear();
+            LCD.showNumber(sensorValue);
+            if (sensorValue/10 != oldSensorValue/10) {
+                try {
+                    int delta = (int) System.currentTimeMillis() - startTime;
+                    Thread.sleep(delta);
+                } catch (InterruptedException ex) {
+                    //
+                }
+                break;
+            }
         }
+        stop();
     }
 
     public void backward() {
@@ -318,12 +347,16 @@ public class Robot {
             length = (byte) steps.length;
             while(steps[i]!=0) {
                 if (steps[i] == 'F') {
+                    showInfo("F");
                     forward();
                 } else if (steps[i] == 'L') {
+                    showInfo("L");
                     left();
                 } else if (steps[i] == 'R') {
+                    showInfo("R");
                     right();
                 } else if (steps[i] == 'B') {
+                    showInfo("B");
                     backward();
                 }
                 
@@ -331,8 +364,13 @@ public class Robot {
             }
             stop();
         }
-    }
 
+        public void showInfo(String s)
+        {
+            LCD.clear();
+            TextLCD.print(s);
+        }
+    }
 
     private class Comm extends Action {
 
@@ -346,6 +384,9 @@ public class Robot {
         }
 
         public void onPRGMPress() {
+            if (in!=null){
+                in.close();
+            }
         }
 
         public void onRUNPress() {
@@ -354,22 +395,25 @@ public class Robot {
 
             in = new RCXInputStream();
             try {
+                byte1 = in.read();
+                byte1 = in.read();
+                handleMaze();
                 while (true) {
-                    byte1 = in.read();
-                    showInfo(byte1);
-                    if (byte1 == ' ')
-                        break;
-
+                    break;
+//                    byte1 = in.read();
+//                    showInfo(byte1);
+//                    if (byte1 == -1)
+//                        break;
+//
 //                    byte2 = in.read();
 //                    showInfo(byte2);
 //
 //                    if      (byte1 == 's' && byte2 == 'm')  handleMaze();
-//
-////                    else if (byte1 == 'f' && byte2 == 'f')  parseForward();
-////                    else if (byte1 == 'm' && byte2 == 'l')  parseMotorLeft();
-////                    else if (byte1 == 'm' && byte2 == 'r')  parseMotorRight();
-////                    else if (byte1 == 'r' && byte2 == 'r')  parseRotateRight();
-////                    else if (byte1 == 'r' && byte2 == 'l')  parseRotateLeft();
+//                    else if (byte1 == 'f' && byte2 == 'f')  parseForward();
+//                    else if (byte1 == 'm' && byte2 == 'l')  parseMotorLeft();
+//                    else if (byte1 == 'm' && byte2 == 'r')  parseMotorRight();
+//                    else if (byte1 == 'r' && byte2 == 'r')  parseRotateRight();
+//                    else if (byte1 == 'r' && byte2 == 'l')  parseRotateLeft();
 
                 }
             } catch (IOException ex) {
@@ -380,17 +424,21 @@ public class Robot {
 
         private void handleMaze() {
             int i = 0;
+            
             try {
                 while (true) {
                     byte1 = in.read();
-                    showInfo(byte1);
-                    if (byte1 == ' ')
+                    //showInfo(byte1);
+                    showInfo(i);
+                    if (byte1 == 0)
                         break;
 
                     steps[i++] = (char)byte1;
                 }
             } catch (IOException ex) {
             }
+            LCD.clear();
+            TextLCD.print("Fs");
             steps[i] = 0;
         }
 
@@ -399,6 +447,7 @@ public class Robot {
             LCD.showNumber(n);
         }
     }
+    
     public static void main(String[] args) {
         Robot r = new Robot();
         while (!r.isDone()) {
