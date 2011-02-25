@@ -17,5 +17,8 @@
 19/2/2011 Sabtu
 20.00 - 21.17 : Program bagian komputer (parsing user input), tinggal siap untuk komunikasi dgn RCX
 
-25/2/2011 Kamis
+24/2/2011 Kamis
 23.00 - 01.36 : Program komputer (simplify regex, modify path converter), Robot (komunikasi, jalan di maze, wall handling, dll)
+
+25/2/2011 Jumat
+20.15 - 20.44 : Minimal robot : tidak menggunakan sensor.
