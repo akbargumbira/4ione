@@ -27,17 +27,29 @@ public class Debug {
 
     public static void main(String[] args) throws IOException {
         try {
-        //Init log
-        LogWriter  log = new LogWriter("log/K.log");
+            //  // Input Algorithm
+//            System.out.println("Choose Algorithm");
+//            System.out.println("1. BFS");
+//            System.out.println("2. DFS");
+//            System.out.println("3. UCS");
+//            System.out.println("4. Best FS");
+//            System.out.println("5. A*");
+//            System.out.println("0. Exit");
+//
+//            System.out.print("Input : ");
+
+            //Init log
+            LogWriter  log = new LogWriter("log/K.log");
+
             //Load maze
             Maze m = new Maze().load("maze/test2.txt");
             System.out.println(m.getMapRepresentation());
 
             //Solve it
 //            Pathfinder f = new BFSPathfinder(log);
-//            Pathfinder f = new DFSPathfinder(log);
+            Pathfinder f = new DFSPathfinder(log);
 //            Pathfinder f = new UCSPathfinder();
-            Pathfinder f = new GreedyPathfinder(log);
+//            Pathfinder f = new GreedyPathfinder(log);
 //            Pathfinder f = new AStarPathfinder(log);
             List<Point> path = f.solve(m);
 
