@@ -38,30 +38,47 @@ public class DFSPathfinder implements Pathfinder {
         _completePath = new LinkedList<Point>();
         DFSNode currNode;
         List<Point> buttons = _maze.getButtons();
-
-        //Get All the button first
+        int button_length = _maze.getButtons().size();
+        //Get start
         currNode = _startPoint;
 
         List<Point> tempPath = new  LinkedList<Point>();
         Point tempPoint = new Point(currNode.x,currNode.y);
-
+        boolean buttonfound = true;
         //Starting from the startpoint, recurse
-        while (buttons.size()!=0){
-            FindButton(tempPoint,tempPath,buttons);
+        while (buttons.size()!=0 && buttonfound){
+            buttonfound = FindButton(tempPoint,tempPath,buttons);
             _completePath.addAll(tempPath);
             tempPoint = tempPath.get(tempPath.size()-1);
             tempPath.clear();
             _log.log("buton size = " + String.valueOf(buttons.size()));
         }
-
-        if(!FindFinish(tempPoint, tempPath)) return null;
+        //No Button found
+        if (!buttonfound && button_length!=0)
+        {
+            _log.log("Button unreacheable");
+            return null;
+        }
+        //No Path to EXIT
+        if(!FindFinish(tempPoint, tempPath))
+        {
+            _log.log("EXIT unreachable");
+            return null;
+        }
 
         _completePath.addAll(tempPath);
+        _log.log("Path :");
+        for (int i = 0; i < _completePath.size(); ++i)
+        {
+            _log.log(_completePath.get(i).x + "," + _completePath.get(i).y);
+        }
+        
         return _completePath;
     }
 
     private boolean FindButton(Point currentNode, List<Point> Path, List<Point> Buttons)
     {
+        Point point;
         Path.add(currentNode);
         this._log.log("push "+ currentNode.x + "," +currentNode.y);
         if (isButtonTouched(Buttons,currentNode))
@@ -73,13 +90,13 @@ public class DFSPathfinder implements Pathfinder {
         else
         {
             if (_maze.isWalkable(currentNode.x + 1, currentNode.y) && !Path.contains(new Point(currentNode.x + 1, currentNode.y)))
-                if(FindButton(currentNode = new Point(currentNode.x + 1, currentNode.y),Path,Buttons)) return true;
+                if(FindButton(point = new Point(currentNode.x + 1, currentNode.y),Path,Buttons)) return true;
             if (_maze.isWalkable(currentNode.x, currentNode.y + 1) && !Path.contains(new Point(currentNode.x, currentNode.y + 1)))
-                if (FindButton(currentNode = new Point(currentNode.x, currentNode.y + 1),Path,Buttons)) return true;
+                if (FindButton(point = new Point(currentNode.x, currentNode.y + 1),Path,Buttons)) return true;
             if (_maze.isWalkable(currentNode.x - 1, currentNode.y) && !Path.contains(new Point(currentNode.x - 1, currentNode.y)))
-                if (FindButton(currentNode = new Point(currentNode.x - 1, currentNode.y),Path,Buttons)) return true;
+                if (FindButton(point = new Point(currentNode.x - 1, currentNode.y),Path,Buttons)) return true;
             if (_maze.isWalkable(currentNode.x, currentNode.y - 1) && !Path.contains(new Point(currentNode.x, currentNode.y - 1)))
-                if(FindButton(currentNode = new Point(currentNode.x, currentNode.y - 1),Path,Buttons)) return true;
+                if(FindButton(point = new Point(currentNode.x, currentNode.y - 1),Path,Buttons)) return true;
         }
         _log.log("pop " + currentNode.x + "," + currentNode.y);
         Path.remove(currentNode);
@@ -88,7 +105,7 @@ public class DFSPathfinder implements Pathfinder {
 
     private boolean FindFinish(Point currentNode, List<Point> Path)
     {
-
+        Point point;
         Path.add(currentNode);
         this._log.log("push "+ currentNode.x + "," +currentNode.y);
 
@@ -100,13 +117,13 @@ public class DFSPathfinder implements Pathfinder {
         else
         {
             if (_maze.isWalkable(currentNode.x + 1, currentNode.y) && !Path.contains(new Point(currentNode.x + 1, currentNode.y)))
-                if(FindFinish(currentNode = new Point(currentNode.x + 1, currentNode.y),Path)) return true;
+                if(FindFinish(point = new Point(currentNode.x + 1, currentNode.y),Path)) return true;
             if (_maze.isWalkable(currentNode.x, currentNode.y + 1) && !Path.contains(new Point(currentNode.x, currentNode.y + 1)))
-                if (FindFinish(currentNode = new Point(currentNode.x, currentNode.y + 1),Path)) return true;
+                if (FindFinish(point = new Point(currentNode.x, currentNode.y + 1),Path)) return true;
             if (_maze.isWalkable(currentNode.x - 1, currentNode.y) && !Path.contains(new Point(currentNode.x - 1, currentNode.y)))
-                if (FindFinish(currentNode = new Point(currentNode.x - 1, currentNode.y),Path)) return true;
+                if (FindFinish(point = new Point(currentNode.x - 1, currentNode.y),Path)) return true;
             if (_maze.isWalkable(currentNode.x, currentNode.y - 1) && !Path.contains(new Point(currentNode.x, currentNode.y - 1)))
-                if (FindFinish(currentNode = new Point(currentNode.x, currentNode.y - 1),Path)) return true;
+                if (FindFinish(point = new Point(currentNode.x, currentNode.y - 1),Path)) return true;
         }
         _log.log("pop " + currentNode.x + "," + currentNode.y);
         Path.remove(currentNode);
