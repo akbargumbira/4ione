@@ -54,33 +54,46 @@ public class BFSPathfinder implements Pathfinder{
         int buttontouched = 0;
         Maze tempMaze = _maze.cloneMaze();
         Queue queue = new LinkedList<BFSNode>();
-        
+
+        //Start Logging :
+        _log.log("Initializing BFS Search......");
+        _log.log("Starting node : " + _startPoint);
+
         //Get All the button first
         currNode = _startPoint;
         startNode = _startPoint;
+        _log.log("Current node : "+currNode);
         while (buttontouched!=buttons.size())
         {
             queue.removeAll(queue);
+            _log.log("Making child from node "+currNode+" ......");
             nodeChild = getChild(currNode);
             for (int i=0; i< nodeChild.size();++i)
             {
                 queue.add(nodeChild.get(i));
+                _log.log("Child "+(i+1)+" : "+nodeChild.get(i));
             }
-            
+
             //Find the button!
             while (!queue.isEmpty() && tempMaze.getCell(currNode.x, currNode.y)!=Maze.BUTTON)
             {
                 currNode = (BFSNode) queue.remove();
+                _log.log("Current Node : "+currNode);
+                _log.log("Evaluating currnode : "+currNode);
                 nodeChild = getChild(currNode);
+                _log.log("Making child from node "+currNode+" ......");
                 for (int i=0; i< nodeChild.size();++i)
                 {
                     queue.add(nodeChild.get(i));
+                    _log.log("Child "+(i+1)+" : "+nodeChild.get(i));
                 }
             }
             //Get The Button or Queue is empty
             //currNode == button
             if (tempMaze.getCell(currNode.x, currNode.y)==Maze.BUTTON)
             {
+                _log.log("Get Button "+(buttontouched+1)+" : "+currNode);
+                _log.log("Step the route to this button...");
                 tempNode = currNode;
                 //Step the route
                 while (currNode.x!=startNode.x || currNode.y!=startNode.y)
@@ -105,27 +118,39 @@ public class BFSPathfinder implements Pathfinder{
 
         //Get the Finish
         queue.removeAll(queue);
+         _log.log("Making child from node "+currNode+" ......");
         nodeChild = getChild(currNode);
         for (int i=0; i< nodeChild.size();++i)
         {
             queue.add(nodeChild.get(i));
+            _log.log("Child "+(i+1)+" : "+nodeChild.get(i));
         }
-        //Find the funish!
+        //Find the finish!
         while (!queue.isEmpty() && tempMaze.getCell(currNode.x, currNode.y)!=Maze.EXIT)
         {
+            _log.log("Current Node : "+currNode);
+            _log.log("Evaluating currnode : "+currNode);
             currNode = (BFSNode) queue.remove();
+            _log.log("Making child from node "+currNode+" ......");
             nodeChild = getChild(currNode);
             for (int i=0; i< nodeChild.size();++i)
             {
                 queue.add(nodeChild.get(i));
+                _log.log("Child "+(i+1)+" : "+nodeChild.get(i));
             }
         }
+
+        _log.log("Current Node : "+currNode);
+        _log.log("Evaluating currnode : "+currNode);
+
         //Get The Finish or Queue is empty
         //currNode == finish
         if (tempMaze.getCell(currNode.x, currNode.y)==Maze.EXIT)
         {
+            _log.log("Finally get the Finish!");
             tempNode = currNode;
             //Step the route
+            _log.log("Step the route to this finish");
             while (currNode.x!=startNode.x || currNode.y!=startNode.y)
             {
                 stack.push(currNode);
@@ -159,5 +184,10 @@ public class BFSPathfinder implements Pathfinder{
               y = Y;
               parent = Parent;
           }
+
+          @Override
+          public String toString() {
+            return "(" + x + "," + y + ")";
+        }
       }
 }
