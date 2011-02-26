@@ -159,9 +159,9 @@ public class Main {
     public static Pathfinder parseAlgoName(String name) {
         if(name.equalsIgnoreCase("AStar"))  return new AStarPathfinder(log);
         if(name.equalsIgnoreCase("BFS"))    return new BFSPathfinder(log);
-        //if(name.equalsIgnoreCase("DFS"))    return new DFSPathfinder();
+        if(name.equalsIgnoreCase("DFS"))    return new DFSPathfinder(log);
         if(name.equalsIgnoreCase("Greedy")) return new GreedyPathfinder(log);
-        if(name.equalsIgnoreCase("UCS"))    return new UCSPathfinder();
+        if(name.equalsIgnoreCase("UCS"))    return new UCSPathfinder(log);
 
         return null;
     }
