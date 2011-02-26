@@ -3,15 +3,8 @@ import josx.platform.rcx.*;
 import josx.rcxcomm.RCXInputStream;
 
 /**
- * USAGE :
- *  Press View to change states
- *  - Comm :
- *      - PRGM  : See the status of robot, will be displayed in LCD
- *      - RUN   : Init communication with tower
- *  - RunMaze :
- *      - PRGM  : Demo, robot will rotate 180 deg, go forward, turn left, then right, stop.
- *      - RUN   : Run the maze
- * @author Ecky, Rezan
+ *
+ * @author user
  */
 public class Robot {
 
@@ -25,21 +18,27 @@ public class Robot {
     public int rotLTime;
 
     //Step buffer
-    private final int SIZE = 100;
+    private final int SIZE = 200;
     private char[] steps = new char[SIZE];
+
+    //Movement logic
+    private int lastSensorVal;
+
 
     public Robot() {
         //Init Variables
         forwardTime = 1000;
         rotLTime    = 1000;
         rotRTime    = 1000;
-        states      = new Action[5];
+        states      = new Action[1];
 
         //Init States
-        states    = new Action[2];
         states[0] = new Comm();
-        states[1] = new RunMaze();
-        
+
+        //Init sensors
+        Sensor.S2.setTypeAndMode(3, 0x80);
+        Sensor.S2.activate();
+
         // Add Listener
         Button.VIEW.addButtonListener(new ButtonListener() {
 
@@ -71,6 +70,10 @@ public class Robot {
         states[currentState].init();
     }
 
+    public int readSensor() {
+        return Sensor.S2.readValue();
+    }
+
     public boolean isMotorMoving() {
         return Motor.A.isMoving() || Motor.C.isMoving();
     }
@@ -85,6 +88,11 @@ public class Robot {
         Motor.C.forward();
     }
 
+    public void backward() {
+        Motor.A.backward();
+        Motor.C.backward();
+    }
+
     public void left() {
         Motor.A.backward();
         Motor.C.forward();
@@ -93,6 +101,18 @@ public class Robot {
     public void right() {
         Motor.A.forward();
         Motor.C.backward();
+    }
+
+    public void farRight(int dir) {
+        if(dir > 0) Motor.A.forward();
+        else Motor.A.backward();
+        Motor.C.stop();
+    }
+
+    public void farLeft(int dir) {
+        Motor.A.stop();
+        if(dir > 0) Motor.C.forward();
+        else Motor.C.backward();
     }
 
     public boolean update() {
@@ -126,32 +146,6 @@ public class Robot {
             LCD.clear();
             TextLCD.print("Comm");
         }
-        
-        public void onPRGMPress() {
-            try {
-
-                //Show Motors
-                LCD.clear();
-                LCD.showNumber(Motor.A.getPower() * 10 + Motor.C.getPower());
-                Thread.sleep(500);
-
-                //Show FF time
-                LCD.clear();
-                LCD.showNumber(forwardTime);
-                Thread.sleep(500);
-
-                //Show Rot L Time
-                LCD.clear();
-                LCD.showNumber(rotLTime);
-                Thread.sleep(500);
-
-                //Show Rot R Time
-                LCD.clear();
-                LCD.showNumber(rotRTime);
-                Thread.sleep(500);
-                
-            } catch (InterruptedException ex) {}
-        }
 
         public void onRUNPress() {
             LCD.clear();
@@ -163,7 +157,10 @@ public class Robot {
 				LCD.clear();
 				TextLCD.print("Block");
                 byte1 = in.read();
+				
                 while (true) {
+					LCD.clear();
+					TextLCD.print("while");
                     if (byte1 == ' ') break;
                     byte2 = in.read();
 
@@ -193,18 +190,20 @@ public class Robot {
             i = 0;
             while(true) {
                 byte1 = in.read();
-                if(byte1 != 'F' && byte1 != 'R' && byte1 != 'L' && byte1 != 'B') break;
+                if(byte1 != 'F' || byte1 != 'R' || byte1 != 'L' || byte1 != 'B') break;
                 else steps[i++] = (char) byte1;
             }
         }
 
         private int parseNum() throws IOException {
+            int idx     = 1;
             int retval  = 0;
             while(true) {
                 byte1 = in.read();
                 if(byte1 < '0' || byte1 > '9') break;
 
-                retval = retval * 10 + charToInt((char) byte1);
+                retval = retval * idx + charToInt((char) byte1);
+                idx *= 10;
             }
 
             return retval;
@@ -215,83 +214,8 @@ public class Robot {
         }
     }
 
-    private class RunMaze extends Action {
-        byte iter;
-
-        public void init() {
-            stop();
-            LCD.clear();
-            TextLCD.print("RM");
-
-            iter = 0;
-        }
-        
-        public void onPRGMPress() {
-            //Demo movement..
-            try {
-                
-                //Rot 180 deg
-                left();
-                Thread.sleep(rotLTime * 2);
-
-                //Go forward
-                forward();
-                Thread.sleep(forwardTime);
-
-                //Turn right
-                right();
-                Thread.sleep(rotRTime);
-
-                //Turn left
-                left();
-                Thread.sleep(rotLTime);
-
-                //Stop
-                stop();
-            
-            } catch (InterruptedException ex) {}
-        }
-
-        public void onRUNPress() {
-            iter = 0;
-            stop();
-
-            while(true) {
-                try {
-                    char cur = steps[iter++];
-                    if(cur == 'F') {
-                        forward();
-                        Thread.sleep(forwardTime);
-                    }
-                    else if(cur == 'B') {
-                        left();
-                        Thread.sleep(rotLTime * 2);
-                    }
-                    else if(cur == 'L') {
-                        left();
-                        Thread.sleep(rotLTime);
-                    }
-                    else if(cur == 'R') {
-                        right();
-                        Thread.sleep(rotRTime);
-                    }
-                    else if(cur == 0) {
-                        stop();
-                        break;
-                    }
-                } catch(InterruptedException ex) {
-                    
-                }
-            }
-        }
-
-
-
-    }
-
-
     public static void main(String[] args) {
         Robot r = new Robot();
-        while(true);
+        while(r.update());
     }
 }

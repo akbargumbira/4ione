@@ -1,0 +1,2 @@
+ml 5 mr 5 rl 1150 rr 1150 ff 500
+sm maze/test2.txt astar
