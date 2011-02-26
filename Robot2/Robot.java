@@ -229,22 +229,23 @@ public class Robot {
         public void onPRGMPress() {
             //Demo movement..
             try {
-                
-                //Rot 180 deg
-                left();
-                Thread.sleep(rotLTime * 2);
 
                 //Go forward
                 forward();
-                Thread.sleep(forwardTime);
+                Thread.sleep(4 * forwardTime);
+				stop();
+				Thread.sleep(1000);
 
-                //Turn right
+
+				//Rot Right 180 deg
                 right();
-                Thread.sleep(rotRTime);
-
-                //Turn left
+                Thread.sleep(rotRTime * 2);
+				stop();
+				Thread.sleep(1000);
+				
+                //Rot Left 180 deg
                 left();
-                Thread.sleep(rotLTime);
+                Thread.sleep(rotLTime * 2);
 
                 //Stop
                 stop();
