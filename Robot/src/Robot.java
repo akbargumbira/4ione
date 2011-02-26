@@ -48,10 +48,7 @@ public class Robot {
 
         // Add Listener
         Button.VIEW.addButtonListener(new ButtonListener() {
-
-            public void buttonPressed(Button button) {
-                // empty
-            }
+            public void buttonPressed(Button button) {}
 
             public void buttonReleased(Button button) {
                 ++currentState;
@@ -61,10 +58,7 @@ public class Robot {
         });
 
         Button.PRGM.addButtonListener(new ButtonListener() {
-
-            public void buttonPressed(Button button) {
-                //
-            }
+            public void buttonPressed(Button button) {}
 
             public void buttonReleased(Button button) {
                 states[currentState].onPRGMPress();
@@ -72,10 +66,7 @@ public class Robot {
         });
 
         Button.RUN.addButtonListener(new ButtonListener() {
-
-            public void buttonPressed(Button button) {
-                //
-            }
+            public void buttonPressed(Button button) {}
 
             public void buttonReleased(Button button) {
                 states[currentState].onRUNPress();
@@ -89,12 +80,15 @@ public class Robot {
     private void activateSensor() {
         Sensor.S2.setTypeAndMode(3, 0x80);
         Sensor.S2.activate();
-        Sensor.S2.addSensorListener(new SensorListener() {
-            public void stateChanged (Sensor src, int oldValue, int newValue) {
-                sensorValue = newValue;
-                //Print disini
-            }
-        });
+//        Sensor.S2.addSensorListener(new SensorListener() {
+//            public void stateChanged (Sensor src, int oldValue, int newValue) {
+//                sensorValue = newValue;
+//            }
+//        });
+    }
+
+    private int readSensor() {
+        return Sensor.S2.readValue();
     }
 
     public void stop() {
@@ -104,13 +98,13 @@ public class Robot {
 
     public void forward() {
         int startTime = (int)System.currentTimeMillis();
-        int oldSensorValue = sensorValue;
+        int oldSensorValue = readSensor();
         Motor.A.forward();
         Motor.C.forward();
         while(true) {
             LCD.clear();
-            LCD.showNumber(sensorValue);
-            if (sensorValue/10 != oldSensorValue/10) {
+            LCD.showNumber(readSensor());
+            if (readSensor()/10 != oldSensorValue/10) {
                 try {
                     int delta = (int) System.currentTimeMillis() - startTime;
                     Thread.sleep(delta);
