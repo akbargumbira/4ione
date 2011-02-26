@@ -80,7 +80,7 @@ public class GreedyPathfinder implements Pathfinder {
 
     private void initTour() {
         _tour.remove(_endPoint);
-        for (Node node : _tour) node.calculateF(_endPoint);
+        for (Node node : _tour) node.calculateF(_curPoint);
         Collections.sort(_tour);
         _tour.add(_endPoint);
     }
