@@ -57,7 +57,7 @@ public class Main {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }    
 
     /**
      * Print program usage
