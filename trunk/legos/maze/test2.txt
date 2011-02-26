@@ -1,7 +1,7 @@
 5
 5
-p p p p b
+e p p p b
 w w p w w
 b p p p p
 w w w w p
-x p b e b
+x p b p b
