@@ -46,8 +46,8 @@ public class Debug {
             System.out.println(m.getMapRepresentation());
 
             //Solve it
-//            Pathfinder f = new BFSPathfinder(log);
-            Pathfinder f = new DFSPathfinder(log);
+            Pathfinder f = new BFSPathfinder(log);
+//            Pathfinder f = new DFSPathfinder(log);
 //            Pathfinder f = new UCSPathfinder();
 //            Pathfinder f = new GreedyPathfinder(log);
 //            Pathfinder f = new AStarPathfinder(log);
