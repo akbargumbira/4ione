@@ -1,6 +1,7 @@
 package pathfinder;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,9 +29,8 @@ public class GreedyPathfinder implements Pathfinder {
     }
 
     public List<Point> solve(Maze maze) {
-
         //Logging
-        _log.log("Init Best-first search");
+        _log.log("Init Best First search");
         long startTime = System.currentTimeMillis();
 
         ///Init vars
@@ -41,6 +41,9 @@ public class GreedyPathfinder implements Pathfinder {
         _tour           = new LinkedList<Node>();
         _completePath   = new LinkedList<Point>();
         for(Point p : maze.getButtons()) _tour.add(new Node(p));
+
+        //Log
+        _log.log("Starting node : " + _startPoint);
 
         //Calculating Fn
         _endPoint.calculateF(_endPoint);
@@ -55,6 +58,9 @@ public class GreedyPathfinder implements Pathfinder {
         while(true) {
             //Get candidates
             getNewCandidates();
+
+            //Log
+            _log.log("Open list : " + _open);
 
             //Exit if there is no candidate
             if(_open.isEmpty()) break;
@@ -74,15 +80,25 @@ public class GreedyPathfinder implements Pathfinder {
                 Long.toString(System.currentTimeMillis() - startTime) + "ms"
         );
 
+        String path = "";
+        for(Point p : _completePath) path += ">>(" + p.x + "," + p.y + ")";
+        _log.log("Complete path : " + path);
+
         //Return found path if tour is finished, else return null
         return _tour.isEmpty() ? _completePath : null;
     }
 
     private void initTour() {
+        _log.log("Calculate Heuristik for buttons");
         _tour.remove(_endPoint);
         for (Node node : _tour) node.calculateF(_startPoint);
         Collections.sort(_tour);
         _tour.add(_endPoint);
+
+        //Log
+        String tour = "";
+        for(Node node : _tour) tour += ">>" + node.toString();
+        _log.log("Planned tour : " + tour);
     }
 
     private void reset() {
@@ -110,6 +126,9 @@ public class GreedyPathfinder implements Pathfinder {
                 _completePath.addAll(candidate.createPathFromOrigin());
                 reset();
                 _curPoint   = new Node(_curPoint);
+
+                _log.log("Stepped on BUTTON " + candidate);
+
                 initTour();
             }
         }
@@ -118,6 +137,8 @@ public class GreedyPathfinder implements Pathfinder {
         else if(c == Maze.EXIT && _tour.size() == 1) {
             _completePath.addAll(candidate.createPathFromOrigin());
             _tour.remove(candidate);
+
+            _log.log("Stepped on EXIT " + candidate.toString());
         }
     }
 
@@ -125,10 +146,13 @@ public class GreedyPathfinder implements Pathfinder {
         Collections.sort(_open);
         Node selected = _open.remove(0);
         _closed.add(selected);
+        _log.log("Moving to : " + selected.toString());
         return _curPoint = selected;
     }
 
     private void getNewCandidates() {
+        List<String> candidates = new ArrayList<String>();
+
         for(int x = -1; x <= 1; ++x) {
             for(int y = -1; y <= 1; ++y) {
                 //Continue if invalid point
@@ -140,15 +164,20 @@ public class GreedyPathfinder implements Pathfinder {
 
                 //If a button found, set the Fn to minimum so the node will be
                 //more likely to be chosen next
-                if(_maze.getCell(node.x, node.y) != Maze.BUTTON)
+                if(_maze.getCell(node.x, node.y) != Maze.BUTTON) {
                     node.calculateF(_tour.get(0));
-                else
+                    candidates.add(node.toString() + " f = " + node.getF());
+                } else {
                     node.calculateF(node);
+                    candidates.add(node.toString() + " f = " + node.getF() + " <BUTTON!>");
+                }
 
                 //Set the parent and add it as a candidate
                 node.parent = _curPoint;
                 _open.add(node);
             }
+
+            _log.log("New node candidates : " + candidates);
         }
     }
 
@@ -196,6 +225,11 @@ public class GreedyPathfinder implements Pathfinder {
                 pp = pp.parent;
             }
             return path;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + x + "," + y + ")";
         }
     }
 }
