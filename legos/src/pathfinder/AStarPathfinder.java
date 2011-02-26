@@ -101,7 +101,7 @@ public class AStarPathfinder implements Pathfinder {
 
     //Using greedy to get the shortest tour
     private List<AStarNode> getShortestTour() {
-        for(AStarNode node : _tour) node.calulateF(_curPoint, node);
+        for(AStarNode node : _tour) node.calulateF(_startPoint, node);
         Collections.sort(_tour);
         return _tour;
     }
@@ -132,7 +132,6 @@ public class AStarPathfinder implements Pathfinder {
                 _completePath.addAll(candidate.createPathFromOrigin());
                 reset();
                 _curPoint   = new AStarNode(_curPoint);
-                _startPoint = _curPoint;
 
                 _log.log("Stepped on BUTTON " + candidate.toString());
 
