@@ -1,2 +1,0 @@
-ml 4 mr 7 rl 850 rr 850 ff 1050
-sm maze/test2.txt astar

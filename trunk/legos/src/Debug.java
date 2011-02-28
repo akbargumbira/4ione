@@ -49,8 +49,8 @@ public class Debug {
             Pathfinder f;
 //            f = new BFSPathfinder(log);
 //            f = new DFSPathfinder(log);
-            f = new UCSPathfinder(log);
-//            f = new GreedyPathfinder(log);
+//            f = new UCSPathfinder(log);
+            f = new GreedyPathfinder(log);
 //            f = new AStarPathfinder(log);
             List<Point> path = f.solve(m);
 
