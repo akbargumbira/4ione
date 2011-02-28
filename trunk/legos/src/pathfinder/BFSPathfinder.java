@@ -166,6 +166,11 @@ public class BFSPathfinder implements Pathfinder{
                 stack.pop();
             }
         }
+
+        String path = "";
+        for(Point p : _completePath) path += ">>(" + p.x + "," + p.y + ")";
+        _log.log("Complete path : " + path);
+
         return _completePath.isEmpty() ? null : _completePath;
     }
 
