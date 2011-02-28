@@ -1,0 +1,14 @@
+18/2/2011 Jum'at
+20.00 - 24.00 : Membuat ALgoritma BFS
+
+19/2/2011 Sabtu
+10.00 - 11.00 Bersihin BFS
+
+27/2/2011 Minggu
+10.00 - 11.00 Tambahin log berpikir buat BFS
+9.30 - 11.00 Uji COba
+15.30 - 18.00 Bikin Video
+23.30 - 24.00 Laporan
+
+28/2/2011 Senin
+12.00 - 14.00 Laporan
