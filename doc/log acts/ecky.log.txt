@@ -22,3 +22,7 @@
 
 25/2/2011 Jumat
 20.15 - 20.44 : Minimal robot : tidak menggunakan sensor.
+
+26/2/2011 Sabtu
+10.00 - 11.00 : Uji coba + Video robot
+22:00 - 22:30 : Dokumen
