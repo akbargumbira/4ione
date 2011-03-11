@@ -178,11 +178,19 @@ public class UCSPathfinder implements Pathfinder{
                 Point temp = new Point(((UCSnode)stack.peek()).x, ((UCSnode)stack.peek()).y);
                 _completePath.add(temp);
                 // log
-                _log.log("put node to complete path"+temp.toString());
+                _log.log("put node to complete path:"+temp.toString());
                 stack.pop();
             }
         }
         // log
+        String sTemp = "";
+        for(Point p: _completePath)
+        {
+            sTemp+=">>("+p.x+","+p.y+")";
+        }
+        // log
+        _log.log("map solved in "+_completePath.size()+" step");
+        _log.log("Complete Path : "+sTemp);
         _log.log("Finish");
         return _completePath.isEmpty() ? null : _completePath;
     }
